@@ -45,11 +45,11 @@ pipeline {
             steps {
                 sh """
                     echo 'Stopping Tomcat...'
-                    sudo ${TOMCAT_HOME}/bin/shutdown.sh || true
+                    ${TOMCAT_HOME}/bin/shutdown.sh || true
                     echo 'Deploying WAR...'
                     cp target/NumberGuessGame-1.0-SNAPSHOT.war ${TOMCAT_WEBAPPS}/NumberGuessGame.war
                     echo 'Starting Tomcat...'
-                    sudo ${TOMCAT_HOME}/bin/startup.sh
+                    ${TOMCAT_HOME}/bin/startup.sh
                     echo 'Deployment complete!'
                 """
             }

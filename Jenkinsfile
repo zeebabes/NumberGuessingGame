@@ -20,14 +20,13 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                script {
-                    sh "mvn ${env.MAVEN_ARGS} --version"
-                    sh "mvn ${env.MAVEN_ARGS} clean validate compile -DskipTests"
-                    sh "mvn ${env.MAVEN_ARGS} test"
-                }
+                sh "mvn ${env.MAVEN_ARGS} clean validate compile -DskipTests"
+                sh "mvn ${env.MAVEN_ARGS} test"
             }
             post {
-                always { junit allowEmptyResults: true, testResults: '**/surefire-reports/*.xml' }
+                always {
+                    junit allowEmptyResults: true, testResults: '**/surefire-reports/*.xml'
+                }
             }
         }
 
@@ -38,15 +37,17 @@ pipeline {
         }
 
         stage('Archive Artifact') {
-            steps { archiveArtifacts artifacts: 'target/*.war', fingerprint: true }
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
         }
 
         stage('Deploy to Tomcat') {
             steps {
                 sh """
-                    echo 'Deploying WAR (hot deploy)...'
-                    cp target/NumberGuessGame-1.0-SNAPSHOT.war ${TOMCAT_WEBAPPS}/NumberGuessGame.war
-                    echo 'Deployment complete! Tomcat auto-redeploys WAR.'
+                    echo 'Deploying WAR to Tomcat...'
+                    cp -f target/NumberGuessGame-1.0-SNAPSHOT.war ${TOMCAT_WEBAPPS}/NumberGuessGame.war
+                    echo 'Deployment complete!'
                 """
             }
         }

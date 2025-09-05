@@ -44,13 +44,9 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 sh """
-                    echo 'Stopping Tomcat...'
-                    ${TOMCAT_HOME}/bin/shutdown.sh || true
-                    echo 'Deploying WAR...'
+                    echo 'Deploying WAR (hot deploy)...'
                     cp target/NumberGuessGame-1.0-SNAPSHOT.war ${TOMCAT_WEBAPPS}/NumberGuessGame.war
-                    echo 'Starting Tomcat...'
-                    ${TOMCAT_HOME}/bin/startup.sh
-                    echo 'Deployment complete!'
+                    echo 'Deployment complete! Tomcat auto-redeploys WAR.'
                 """
             }
         }
